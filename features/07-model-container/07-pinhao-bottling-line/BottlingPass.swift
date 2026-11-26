@@ -1,8 +1,8 @@
 // Feature: ModelContainer and ModelConfiguration
 // Slot 07 — Pinhão bottling line
 // Teaches:
-// - Two containers that name the same in-memory configuration share that store.
-// - A different configuration name opens a separate empty store.
+// - A second container with the same in-memory configuration name still opens empty.
+// - Only the container that saved can see the filler's pass.
 
 import SwiftData
 import SwiftUI
@@ -32,7 +32,7 @@ enum PinhaoLine {
         try ModelContext(container).fetchCount(FetchDescriptor<Model>())
     }
 
-    /// The filler saves one pass, then every station counts what it can see.
+    /// The filler saves one pass, then every station opens its own container and counts.
     static func runLine() throws -> [StationReading] {
         let filler = try openStation(storeName: "pinhao-line")
         let context = ModelContext(filler)
@@ -60,10 +60,10 @@ struct BottlingPassScreen: View {
         ScenarioChrome(
             kicker: "ModelContainer · 07",
             title: "Pinhão bottling line",
-            situation: "On 6 April 2026 Tiago Rebelo bottles the 2022 vintage at Quinta do Vale Escuro in Pinhão, using the RV-2603-A stoppers. The filler and the corker each open a container on an in-memory store named pinhao-line. The label table opens one named pinhao-labels.",
+            situation: "On 6 April 2026 Tiago Rebelo bottles the 2022 vintage at Quinta do Vale Escuro in Pinhão, using the RV-2603-A stoppers. The filler, corker, and label table each open their own container. Filler and corker both name the store pinhao-line; the label table uses pinhao-labels.",
             teaches: [
-                "Two containers that name the same in-memory configuration share that store.",
-                "A different configuration name opens a separate empty store."
+                "A second container with the same in-memory configuration name still opens empty.",
+                "Only the container that saved can see the filler's pass."
             ]
         ) {
             Section("Stations") {

@@ -4,8 +4,8 @@ On 27 April 2026 Helena Sarmento pours morning blend trials, clears the book, an
 
 **What it teaches**
 
-- On macOS 15 and later, deleteAllData() empties the container's store.
-- The same container takes the next trial's samples without being reopened.
+- delete(model:) with no predicate removes every sample in the trial book.
+- The same container takes the afternoon trial without being reopened.
 
 **Files**
 
@@ -15,6 +15,6 @@ On 27 April 2026 Helena Sarmento pours morning blend trials, clears the book, an
 
 **Try it**
 
-Open Gaia blend trial. Pour the morning trial, pour it away, then pour the afternoon trial.
+Open Gaia blend trial. Pour the morning trial, clear it with delete(model:), then pour the afternoon trial.
 
 `swift test` locks the lesson in `deleteAllDataClearsTheTrialBook`.

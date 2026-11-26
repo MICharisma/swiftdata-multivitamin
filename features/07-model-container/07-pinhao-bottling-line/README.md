@@ -4,8 +4,8 @@ On 6 April 2026 Tiago Rebelo bottles the 2022 vintage at Quinta do Vale Escuro i
 
 **What it teaches**
 
-- Two containers that name the same in-memory configuration share that store.
-- A different configuration name opens a separate empty store.
+- A second container with the same in-memory configuration name still opens empty.
+- Only the container that saved can see the filler's pass.
 
 **Files**
 
@@ -15,6 +15,6 @@ On 6 April 2026 Tiago Rebelo bottles the 2022 vintage at Quinta do Vale Escuro i
 
 **Try it**
 
-Open Pinhão bottling line. Run the filler, then ask each station. Filler and corker share the store; the label table does not.
+Open Pinhão bottling line. Run the filler, then ask each station. Only the filler sees its pass; the corker's same-named store is empty.
 
-`swift test` locks the lesson in `sameMemoryNameSharesAStore`.
+`swift test` locks the lesson in `sameMemoryNameStillOpensEmpty`.

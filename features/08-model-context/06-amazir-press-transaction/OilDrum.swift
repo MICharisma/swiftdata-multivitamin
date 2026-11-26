@@ -2,7 +2,7 @@
 // Slot 06 — Amazir press transaction
 // Teaches:
 // - transaction runs its closure and saves what the closure changed.
-// - If the transaction throws, nothing from that closure is saved.
+// - If the transaction throws, nothing from that closure is filed, and the context still hasChanges.
 
 import SwiftData
 import SwiftUI
@@ -71,7 +71,7 @@ private struct PressTransactionDesk: View {
             situation: "On 10 October 2026 Youssef drains run AM-1009 into a drum and bags the press cake for a goat farmer in Ounagha. Drum and cake go in the book together. On run AM-1010 the drum scale jams halfway.",
             teaches: [
                 "transaction runs its closure and saves what the closure changed.",
-                "If the transaction throws, nothing from that closure is saved."
+                "If the transaction throws, nothing from that closure is filed, and the context still hasChanges."
             ]
         ) {
             Section("Press book") {

@@ -843,8 +843,8 @@ enum Catalog {
             id: "07-pinhao-bottling-line",
             title: "Pinhão bottling line",
             teaches: [
-                "Two containers that name the same in-memory configuration share that store.",
-                "A different configuration name opens a separate empty store."
+                "A second container with the same in-memory configuration name still opens empty.",
+                "Only the container that saved can see the filler's pass."
             ]
         ),
         CatalogScenario(
@@ -867,8 +867,8 @@ enum Catalog {
             id: "10-gaia-blend-trial",
             title: "Gaia blend trial",
             teaches: [
-                "On macOS 15 and later, deleteAllData() empties the container's store.",
-                "The same container takes the next trial's samples without being reopened."
+                "delete(model:) with no predicate removes every sample in the trial book.",
+                "The same container takes the afternoon trial without being reopened."
             ]
         ),
         CatalogScenario(
@@ -918,8 +918,8 @@ enum Catalog {
             id: "03-tifawin-roast-card",
             title: "Tifawin roast card",
             teaches: [
-                "An edit to a saved card waits in the context until the next save.",
-                "rollback() puts the card back to its saved values."
+                "Changing pan minutes marks the context changed.",
+                "rollback() clears hasChanges, but the open card keeps the new minutes; a fresh fetch still reads the filed value."
             ]
         ),
         CatalogScenario(
@@ -934,8 +934,8 @@ enum Catalog {
             id: "05-essaouira-press-autosave",
             title: "Essaouira press autosave",
             teaches: [
-                "The main context from modelContainer(for:inMemory:) autosaves by default.",
-                "A ModelContext you make yourself starts with autosave off."
+                "Both the main context and a ModelContext you make start with autosave on.",
+                "Setting autosaveEnabled to false makes the press book wait for an explicit save."
             ]
         ),
         CatalogScenario(
@@ -943,7 +943,7 @@ enum Catalog {
             title: "Amazir press transaction",
             teaches: [
                 "transaction runs its closure and saves what the closure changed.",
-                "If the transaction throws, nothing from that closure is saved."
+                "If the transaction throws, nothing from that closure is filed, and the context still hasChanges."
             ]
         ),
         CatalogScenario(
@@ -967,7 +967,7 @@ enum Catalog {
             title: "Zitoun label purge",
             teaches: [
                 "delete(model:where:) removes every label that matches a predicate, without fetching them first.",
-                "The purge waits for save before the store loses the matching labels."
+                "The matching labels are gone from the store as soon as delete(model:where:) returns."
             ]
         ),
         CatalogScenario(

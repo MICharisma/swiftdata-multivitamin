@@ -1,8 +1,8 @@
 // Feature: ModelContainer and ModelConfiguration
 // Slot 10 — Gaia blend trial
 // Teaches:
-// - On macOS 15 and later, deleteAllData() empties the container's store.
-// - The same container takes the next trial's samples without being reopened.
+// - delete(model:) with no predicate removes every sample in the trial book.
+// - The same container takes the afternoon trial without being reopened.
 
 import Observation
 import SwiftData
@@ -40,14 +40,9 @@ final class BlendTrialBook {
     }
 
     func clearTrial() throws {
-        if #available(macOS 15, *) {
-            container.deleteAllData()
-            clearedWith = "deleteAllData()"
-        } else {
-            try container.mainContext.delete(model: BlendSample.self)
-            try container.mainContext.save()
-            clearedWith = "delete(model:)"
-        }
+        try container.mainContext.delete(model: BlendSample.self)
+        try container.mainContext.save()
+        clearedWith = "delete(model:)"
         try reread()
     }
 
@@ -94,8 +89,8 @@ private struct BlendTrialDesk: View {
             title: "Gaia blend trial",
             situation: "On 27 April 2026 Helena Sarmento tries VE-22 against two older pipes. The trial samples are poured away at the end of the morning, and the afternoon trial starts on a clean book.",
             teaches: [
-                "On macOS 15 and later, deleteAllData() empties the container's store.",
-                "The same container takes the next trial's samples without being reopened."
+                "delete(model:) with no predicate removes every sample in the trial book.",
+                "The same container takes the afternoon trial without being reopened."
             ]
         ) {
             Section("Samples in the store") {

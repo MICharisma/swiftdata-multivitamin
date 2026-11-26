@@ -1,8 +1,8 @@
 // Feature: ModelContext
 // Slot 05 — Essaouira press autosave
 // Teaches:
-// - The main context from modelContainer(for:inMemory:) autosaves by default.
-// - A ModelContext you make yourself starts with autosave off.
+// - Both the main context and a ModelContext you make start with autosave on.
+// - Setting autosaveEnabled to false makes the press book wait for an explicit save.
 
 import SwiftData
 import SwiftUI
@@ -42,35 +42,46 @@ struct PressRunScreen: View {
 
 private struct PressAutosaveDesk: View {
     @Environment(\.modelContext) private var modelContext
+    @State private var defaults: AutosaveFlags?
     @State private var pressed = false
+    @State private var filedBeforeSave = -1
 
     var body: some View {
         ScenarioChrome(
             kicker: "ModelContext · 05",
             title: "Essaouira press autosave",
-            situation: "On 9 October 2026 the Tifawin roast reaches Huilerie Amazir in Essaouira. Youssef Bennani presses 22 kilos of roasted kernels into 10 litres of oil. Nobody at the press taps save.",
+            situation: "On 9 October 2026 the Tifawin roast reaches Huilerie Amazir in Essaouira. Youssef Bennani presses 22 kilos of roasted kernels into 10 litres of oil. The desk turns autosave off before the run is entered.",
             teaches: [
-                "The main context from modelContainer(for:inMemory:) autosaves by default.",
-                "A ModelContext you make yourself starts with autosave off."
+                "Both the main context and a ModelContext you make start with autosave on.",
+                "Setting autosaveEnabled to false makes the press book wait for an explicit save."
             ]
         ) {
-            Section("Contexts") {
-                let flags = AutosaveFlags(modelContext.container)
-                LabeledContent("Main context autosaves", value: String(flags.mainContext))
-                LabeledContent("A context you make autosaves", value: String(flags.madeContext))
+            Section("Defaults before this desk changes them") {
+                if let defaults {
+                    LabeledContent("Main context autosaves", value: String(defaults.mainContext))
+                    LabeledContent("A context you make autosaves", value: String(defaults.madeContext))
+                }
             }
             Section("Press book") {
-                Button("Press run AM-1009") {
+                LabeledContent("This context autosaves", value: String(modelContext.autosaveEnabled))
+                Button("Press run AM-1009 with autosave off") {
+                    modelContext.autosaveEnabled = false
                     modelContext.insert(PressRun(runCode: "AM-1009", pressOperator: "Youssef Bennani", roastedKilos: 22, oilLitres: 10))
+                    filedBeforeSave = (try? modelContext.freshCount(PressRun.self)) ?? 0
                     pressed = true
                 }
                 .disabled(pressed)
-                TimelineView(.periodic(from: .now, by: 1)) { timeline in
-                    LabeledContent("Filed, read from a new context") {
-                        Text("\((try? modelContext.freshCount(PressRun.self)) ?? 0) runs at \(timeline.date.formatted(date: .omitted, time: .standard))")
+                if filedBeforeSave >= 0 {
+                    LabeledContent("Filed before save", value: "\(filedBeforeSave)")
+                    Button("Save the press run") {
+                        try? modelContext.save()
+                        filedBeforeSave = (try? modelContext.freshCount(PressRun.self)) ?? 0
                     }
                 }
             }
+        }
+        .onAppear {
+            defaults = AutosaveFlags(modelContext.container)
         }
     }
 }

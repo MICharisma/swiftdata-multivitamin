@@ -30,13 +30,13 @@ On 5 October 2026 Fadma Aït Brahim cracks 9.5 kilos of kernels. On 6 October th
 | --- | --- |
 | 01 | insert / save / hasChanges |
 | 02 | insertedModelsArray / changedModelsArray / deletedModelsArray |
-| 03 | rollback after edit, @Bindable Stepper |
+| 03 | rollback clears hasChanges but keeps open minutes, @Bindable Stepper |
 | 04 | rollback of unsaved insert, ModelContext extension |
-| 05 | autosaveEnabled defaults, modelContainer(for:inMemory:), TimelineView |
+| 05 | autosaveEnabled defaults true; set false for explicit save |
 | 06 | transaction, throwing Error, two models |
 | 07 | delete + rollback, List onDelete |
 | 08 | ModelContext.didSave, onReceive, PersistentIdentifier arrays |
-| 09 | delete(model:where:), #Predicate |
+| 09 | delete(model:where:) removes at once, #Predicate |
 | 10 | enumerate(batchSize:), FetchDescriptor predicate |
 | 11 | Two ModelContexts, registeredModel |
 | 12 | registeredModel vs model(for:) |

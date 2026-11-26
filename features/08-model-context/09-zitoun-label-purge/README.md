@@ -5,7 +5,7 @@ On 14 October the soap labels have to leave the print run before the courier to 
 **What it teaches**
 
 - delete(model:where:) removes every label that matches a predicate, without fetching them first.
-- The purge waits for save before the store loses the matching labels.
+- The matching labels are gone from the store as soon as delete(model:where:) returns.
 
 **Files**
 
@@ -15,6 +15,6 @@ On 14 October the soap labels have to leave the print run before the courier to 
 
 **Try it**
 
-Open Zitoun label purge. Print, purge ZT-312, then save. The store loses the soap labels only after save.
+Open Zitoun label purge. Print, then purge ZT-312. The store loses the soap labels as soon as the purge returns.
 
-`swift test` locks the lesson in `predicateDeleteWaitsForSave`.
+`swift test` locks the lesson in `predicateDeleteRemovesMatchingRowsAtOnce`.

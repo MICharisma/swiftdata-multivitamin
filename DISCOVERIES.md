@@ -128,13 +128,13 @@ Shown in [Bedesten aside](features/05-transient/07-bedesten-aside/).
 
 ## ModelContainer and ModelConfiguration
 
-### Two containers that name the same in-memory configuration share that store
+### A second container with the same in-memory configuration name still opens empty
 
-**What happens.** The filler opens `ModelConfiguration("pinhao-line", isStoredInMemoryOnly: true)`, inserts a bottling pass, and saves. The corker opens another container with that same configuration name. A fetch on the corker's context returns the filler's pass. The label table opens `ModelConfiguration("pinhao-labels", isStoredInMemoryOnly: true)` and fetches none.
+**What happens.** The filler opens `ModelConfiguration("pinhao-line", isStoredInMemoryOnly: true)`, inserts a bottling pass, and saves. The corker opens another container with that same configuration name. A fetch on the corker's context returns no passes. The label table, named `pinhao-labels`, also returns none.
 
-**Why it matters.** An in-memory configuration name is not a private scratch pad. Reusing the name joins the stores.
+**Why it matters.** Reusing an in-memory configuration name does not join two containers. Each `ModelContainer` keeps its own store.
 
-**What to do.** Give each private desk a distinct configuration name, or keep one container and make contexts from it.
+**What to do.** Keep one container and make contexts from it when stations must share a book.
 
 Shown in [Pinhão bottling line](features/07-model-container/07-pinhao-bottling-line/).
 
@@ -150,15 +150,35 @@ Shown in [Bonfim till and stockroom](features/07-model-container/12-bonfim-till-
 
 ## ModelContext
 
-### A ModelContext you make yourself starts with autosave off
+### Both the main context and a ModelContext you make start with autosave on
 
-**What happens.** A container opened with an in-memory configuration has `mainContext.autosaveEnabled` true. `ModelContext(container)` has `autosaveEnabled` false. An insert on that made context leaves `hasChanges` true, and a fresh context on the container counts 0 rows until `save()`.
+**What happens.** A container opened with an in-memory configuration has `mainContext.autosaveEnabled` true. `ModelContext(container)` also has `autosaveEnabled` true. After `autosaveEnabled` is set to false, an insert leaves `hasChanges` true, and a fresh context counts 0 rows until `save()`.
 
-**Why it matters.** Code that assumes every context autosaves will leave work unsaved when it builds its own context.
+**Why it matters.** Code that builds its own context still autosaves unless it turns the flag off. The catalog's `MemoryStore` turns it off so every save is visible.
 
-**What to do.** Call `save()`, or set `autosaveEnabled = true` on the context you made.
+**What to do.** Set `autosaveEnabled = false` when the desk should wait for an explicit save.
 
 Shown in [Essaouira press autosave](features/08-model-context/05-essaouira-press-autosave/).
+
+### rollback() clears hasChanges but leaves the open card's edited value
+
+**What happens.** Khadija's roast is saved at 12 pan minutes. The open card is set to 20. `hasChanges` is true. `rollback()` makes `hasChanges` false. The open card still shows 20. A fresh context reads 12.
+
+**Why it matters.** Rolling back does not rewrite the property on the instance you hold. A screen bound to that instance will keep showing the edited minutes.
+
+**What to do.** Read the filed value from a new context after rollback, or set the property back yourself.
+
+Shown in [Tifawin roast card](features/08-model-context/03-tifawin-roast-card/).
+
+### delete(model:where:) removes matching rows without a separate save
+
+**What happens.** Five labels are filed. `delete(model:where:)` runs for batch ZT-312. A fetch in the same context returns three labels. A fresh context also returns three, with no `save()` in between.
+
+**Why it matters.** A desk that expects the purge to wait for save will think the soap labels are still in the store.
+
+**What to do.** Treat `delete(model:where:)` as already filed when it returns.
+
+Shown in [Zitoun label purge](features/08-model-context/09-zitoun-label-purge/).
 
 ### A context's held object stays stale when another context on the same container saves
 

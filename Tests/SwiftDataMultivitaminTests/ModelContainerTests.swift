@@ -4,6 +4,7 @@ import Testing
 @testable import SwiftDataMultivitamin
 
 @MainActor
+@Suite(.serialized)
 struct ModelContainerTests {
     @Test func barkTallyOpensAnInMemoryContainer() throws {
         let container = try BarkTallyBook.open()
@@ -100,11 +101,11 @@ struct ModelContainerTests {
         ScratchFolder.discard(archiveURL)
     }
 
-    @Test func sameMemoryNameSharesAStore() throws {
+    @Test func sameMemoryNameStillOpensEmpty() throws {
         let readings = try PinhaoLine.runLine()
         #expect(readings == [
             StationReading(station: "Filler", passes: 1),
-            StationReading(station: "Corker", passes: 1),
+            StationReading(station: "Corker", passes: 0),
             StationReading(station: "Label table", passes: 0)
         ])
     }
@@ -134,6 +135,7 @@ struct ModelContainerTests {
         #expect(book.sampleCodes == ["T1-A", "T1-B"])
         try book.clearTrial()
         #expect(book.sampleCodes.isEmpty)
+        #expect(book.clearedWith == "delete(model:)")
         try book.pour(GaiaTrials.secondTrial)
         #expect(book.sampleCodes == ["T2-A"])
     }

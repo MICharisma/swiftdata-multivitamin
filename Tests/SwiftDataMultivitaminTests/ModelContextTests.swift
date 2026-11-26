@@ -4,6 +4,7 @@ import Testing
 @testable import SwiftDataMultivitamin
 
 @MainActor
+@Suite(.serialized)
 struct ModelContextTests {
     @Test func insertSetsHasChangesAndSaveClearsIt() throws {
         let context = try MemoryStore.context(for: CrackingTally.self)
@@ -32,7 +33,7 @@ struct ModelContextTests {
         #expect(try context.freshCount(KernelSack.self) == 3)
     }
 
-    @Test func rollbackRestoresSavedPanMinutes() throws {
+    @Test func rollbackClearsHasChangesButKeepsOpenMinutes() throws {
         let context = try MemoryStore.context(for: KernelRoast.self)
         let roast = KernelRoast(roastCode: "TF-0412-R", roasterName: "Khadija Oubella", panMinutes: 12, forCulinaryOil: true)
         context.insert(roast)
@@ -40,7 +41,7 @@ struct ModelContextTests {
         roast.panMinutes = 20
         #expect(context.hasChanges)
         context.rollback()
-        #expect(roast.panMinutes == 12)
+        #expect(roast.panMinutes == 20)
         #expect(!context.hasChanges)
         #expect(try context.freshFirst(KernelRoast.self)?.panMinutes == 12)
     }
@@ -60,7 +61,7 @@ struct ModelContextTests {
     @Test func mainContextAutosavesByDefault() throws {
         let container = try ModelContainer(for: PressRun.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         #expect(container.mainContext.autosaveEnabled)
-        #expect(ModelContext(container).autosaveEnabled == false)
+        #expect(ModelContext(container).autosaveEnabled)
 
         let manual = ModelContext(container)
         manual.autosaveEnabled = false
@@ -82,6 +83,8 @@ struct ModelContextTests {
         }
         #expect(try context.freshCount(OilDrum.self) == 1)
         #expect(try context.freshCount(PressCake.self) == 1)
+        #expect(context.hasChanges)
+        context.rollback()
         #expect(!context.hasChanges)
     }
 
@@ -121,14 +124,12 @@ struct ModelContextTests {
         #expect(try context.freshCount(CreamBatch.self) == 1)
     }
 
-    @Test func predicateDeleteWaitsForSave() throws {
+    @Test func predicateDeleteRemovesMatchingRowsAtOnce() throws {
         let context = try MemoryStore.context(for: ProductLabel.self)
         try ZitounLabels.printRun(in: context)
         #expect(try context.freshCount(ProductLabel.self) == 5)
         try ZitounLabels.purge(batch: "ZT-312", in: context)
         #expect(try context.fetchCount(FetchDescriptor<ProductLabel>()) == 3)
-        #expect(try context.freshCount(ProductLabel.self) == 5)
-        try context.save()
         #expect(try context.freshCount(ProductLabel.self) == 3)
     }
 

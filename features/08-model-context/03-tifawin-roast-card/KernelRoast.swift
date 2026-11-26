@@ -1,8 +1,8 @@
 // Feature: ModelContext
 // Slot 03 — Tifawin roast card
 // Teaches:
-// - An edit to a saved card waits in the context until the next save.
-// - rollback() puts the card back to its saved values.
+// - Changing pan minutes marks the context changed.
+// - rollback() clears hasChanges, but the open card keeps the new minutes; a fresh fetch still reads the filed value.
 
 import SwiftData
 import SwiftUI
@@ -31,6 +31,7 @@ struct KernelRoastScreen: View {
 private struct RoastCardDesk: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var roasts: [KernelRoast]
+    @State private var filedMinutes = "—"
 
     var body: some View {
         ScenarioChrome(
@@ -38,8 +39,8 @@ private struct RoastCardDesk: View {
             title: "Tifawin roast card",
             situation: "On 7 October 2026 Khadija Oubella roasts sack TF-0412 in the clay pan for culinary oil: twelve minutes. A helper nudges the card to twenty before Khadija sees it.",
             teaches: [
-                "An edit to a saved card waits in the context until the next save.",
-                "rollback() puts the card back to its saved values."
+                "Changing pan minutes marks the context changed.",
+                "rollback() clears hasChanges, but the open card keeps the new minutes; a fresh fetch still reads the filed value."
             ]
         ) {
             if let roast = roasts.first {
@@ -47,18 +48,28 @@ private struct RoastCardDesk: View {
                 Section {
                     LabeledContent("On the card", value: "\(roast.panMinutes) minutes")
                     LabeledContent("hasChanges", value: String(modelContext.hasChanges))
-                    Button("Put the card back", role: .destructive) { modelContext.rollback() }
-                        .disabled(!modelContext.hasChanges)
-                    Button("Keep the new minutes") { try? modelContext.save() }
-                        .disabled(!modelContext.hasChanges)
+                    LabeledContent("Filed minutes", value: filedMinutes)
+                    Button("Roll back the context", role: .destructive) {
+                        modelContext.rollback()
+                        refreshFiled()
+                    }
+                    Button("Keep the new minutes") {
+                        try? modelContext.save()
+                        refreshFiled()
+                    }
                 }
             } else {
                 Button("File Khadija's roast") {
                     modelContext.insert(KernelRoast(roastCode: "TF-0412-R", roasterName: "Khadija Oubella", panMinutes: 12, forCulinaryOil: true))
                     try? modelContext.save()
+                    refreshFiled()
                 }
             }
         }
+    }
+
+    private func refreshFiled() {
+        filedMinutes = (try? modelContext.freshFirst(KernelRoast.self)).map { "\($0.panMinutes)" } ?? "—"
     }
 }
 

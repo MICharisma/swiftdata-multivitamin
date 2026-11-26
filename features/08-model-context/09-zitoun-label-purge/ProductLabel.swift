@@ -2,7 +2,7 @@
 // Slot 09 — Zitoun label purge
 // Teaches:
 // - delete(model:where:) removes every label that matches a predicate, without fetching them first.
-// - The purge waits for save before the store loses the matching labels.
+// - The matching labels are gone from the store as soon as delete(model:where:) returns.
 
 import SwiftData
 import SwiftUI
@@ -59,7 +59,7 @@ private struct LabelPurgeDesk: View {
             situation: "On 14 October 2026 Salma's print run holds labels for the night cream and the pulled black soap, in French, Arabic, and English. The soap labels have to go before the courier to Rahba Kedima.",
             teaches: [
                 "delete(model:where:) removes every label that matches a predicate, without fetching them first.",
-                "The purge waits for save before the store loses the matching labels."
+                "The matching labels are gone from the store as soon as delete(model:where:) returns."
             ]
         ) {
             Section("Labels in the context") {

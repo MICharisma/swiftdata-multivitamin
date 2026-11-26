@@ -4,8 +4,8 @@ On 7 October 2026 Khadija Oubella roasts sack TF-0412 for twelve minutes; a help
 
 **What it teaches**
 
-- An edit to a saved card waits in the context until the next save.
-- rollback() puts the card back to its saved values.
+- Changing pan minutes marks the context changed.
+- rollback() clears hasChanges, but the open card keeps the new minutes; a fresh fetch still reads the filed value.
 
 **Files**
 
@@ -15,6 +15,6 @@ On 7 October 2026 Khadija Oubella roasts sack TF-0412 for twelve minutes; a help
 
 **Try it**
 
-Open Tifawin roast card. File the roast, nudge the minutes, then put the card back. The minutes return to 12.
+Open Tifawin roast card. File the roast, nudge the minutes, then roll back. The open card keeps 20; filed minutes stay 12.
 
-`swift test` locks the lesson in `rollbackRestoresSavedPanMinutes`.
+`swift test` locks the lesson in `rollbackClearsHasChangesButKeepsOpenMinutes`.

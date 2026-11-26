@@ -34,10 +34,10 @@ On 14 July 2025 Joaquim Pires strips row 14; on 18 July Manuel Cardoso stacks th
 | 04 | allowsSave: false, Result.regrade refusal |
 | 05 | Two configurations, result builder |
 | 06 | Configuration as a value, Table |
-| 07 | Shared vs distinct in-memory names, generics |
+| 07 | Same in-memory name still opens empty, generics |
 | 08 | Sendable container, actor, async let |
 | 09 | Schema.Version, lazy filter + KeyPath |
-| 10 | deleteAllData(), @Observable book |
+| 10 | delete(model:) clears trial, @Observable book |
 | 11 | Associated-value enum → configuration, switch expression |
 | 12 | Two containers on one file, KeyPath read |
 | 13 | File + memory shelves, morning folder |

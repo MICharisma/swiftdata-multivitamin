@@ -5,7 +5,7 @@ On 10 October Youssef drains a drum and bags press cake together; the next run's
 **What it teaches**
 
 - transaction runs its closure and saves what the closure changed.
-- If the transaction throws, nothing from that closure is saved.
+- If the transaction throws, nothing from that closure is filed, and the context still hasChanges.
 
 **Files**
 

@@ -4,8 +4,8 @@ On 9 October 2026 Youssef Bennani presses the roast at Huilerie Amazir in Essaou
 
 **What it teaches**
 
-- The main context from modelContainer(for:inMemory:) autosaves by default.
-- A ModelContext you make yourself starts with autosave off.
+- Both the main context and a ModelContext you make start with autosave on.
+- Setting autosaveEnabled to false makes the press book wait for an explicit save.
 
 **Files**
 
@@ -15,6 +15,6 @@ On 9 October 2026 Youssef Bennani presses the roast at Huilerie Amazir in Essaou
 
 **Try it**
 
-Open Essaouira press autosave. Press the run and watch the filed count climb without an explicit save.
+Open Essaouira press autosave. Note both defaults are on, press with autosave off, then save. The run is filed only after save.
 
 `swift test` locks the lesson in `mainContextAutosavesByDefault`.
