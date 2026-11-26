@@ -55,13 +55,13 @@ enum Catalog {
             id: "07-model-container",
             title: "ModelContainer and ModelConfiguration",
             summary: "Where a store lives, in memory or on disk, and how it is opened.",
-            scenarios: []
+            scenarios: modelContainer
         ),
         CatalogFeature(
             id: "08-model-context",
             title: "ModelContext",
             summary: "Insert, save, autosave, and rollback.",
-            scenarios: []
+            scenarios: modelContext
         ),
         CatalogFeature(
             id: "09-query",
@@ -785,6 +785,221 @@ enum Catalog {
             teaches: [
                 "One schema can hold enum, struct, collection, and raw-code cards together.",
                 "A Codable handover snapshot is assembled from fresh reads without model relationships."
+            ]
+        )
+    ]
+
+
+    private static let modelContainer: [CatalogScenario] = [
+        CatalogScenario(
+            id: "01-coruche-bark-tally",
+            title: "Coruche bark tally",
+            teaches: [
+                "A container is opened from a model type and a configuration.",
+                "An in-memory configuration gives each container its own empty store."
+            ]
+        ),
+        CatalogScenario(
+            id: "02-sobral-stack-book",
+            title: "Sobral stack book",
+            teaches: [
+                "ModelConfiguration(url:) puts the store in a file you choose.",
+                "A second container opened on that file reads what the first one saved."
+            ]
+        ),
+        CatalogScenario(
+            id: "03-sorraia-boiling-yard",
+            title: "Sorraia boiling yard",
+            teaches: [
+                "Naming one model brings every model it relates to into the container's schema.",
+                "The boiled planks can be fetched though the container was opened for the batch."
+            ]
+        ),
+        CatalogScenario(
+            id: "04-feira-grading-archive",
+            title: "Feira grading archive",
+            teaches: [
+                "allowsSave: false opens an existing store file for reading.",
+                "A save through that container throws, and the file keeps last season's grades."
+            ]
+        ),
+        CatalogScenario(
+            id: "05-feira-punching-floor",
+            title: "Feira punching floor",
+            teaches: [
+                "One container can hold two configurations, each with its own schema and file.",
+                "Each model is saved to the file whose configuration lists it."
+            ]
+        ),
+        CatalogScenario(
+            id: "06-feira-print-room",
+            title: "Feira print room",
+            teaches: [
+                "A ModelConfiguration is a value. Building one creates no file.",
+                "Its name, url, and flags say where a container would put the store."
+            ]
+        ),
+        CatalogScenario(
+            id: "07-pinhao-bottling-line",
+            title: "Pinhão bottling line",
+            teaches: [
+                "Two containers that name the same in-memory configuration share that store.",
+                "A different configuration name opens a separate empty store."
+            ]
+        ),
+        CatalogScenario(
+            id: "08-vale-escuro-cellar-book",
+            title: "Vale Escuro cellar book",
+            teaches: [
+                "A ModelContainer is Sendable. An actor can keep one and make its own contexts.",
+                "Saves from those contexts land in the store the main context reads."
+            ]
+        ),
+        CatalogScenario(
+            id: "09-gaia-lodge-register",
+            title: "Gaia lodge register",
+            teaches: [
+                "A container can be opened from a Schema value that carries a version.",
+                "container.schema is that schema, version included."
+            ]
+        ),
+        CatalogScenario(
+            id: "10-gaia-blend-trial",
+            title: "Gaia blend trial",
+            teaches: [
+                "On macOS 15 and later, deleteAllData() empties the container's store.",
+                "The same container takes the next trial's samples without being reopened."
+            ]
+        ),
+        CatalogScenario(
+            id: "11-bonfim-shelf-books",
+            title: "Bonfim shelf books",
+            teaches: [
+                "An enum with associated values can choose the configuration for each place a book lives.",
+                "The container reports back the configuration it was opened with."
+            ]
+        ),
+        CatalogScenario(
+            id: "12-bonfim-till-and-stockroom",
+            title: "Bonfim till and stockroom",
+            teaches: [
+                "Two containers can open the same store file.",
+                "A model already held in one container does not refresh when the other container saves; a new context does."
+            ]
+        ),
+        CatalogScenario(
+            id: "13-lisbon-morning-folder",
+            title: "Lisbon morning folder",
+            teaches: [
+                "One container can join a store file and an in-memory store, each for its own models.",
+                "Reopening the file brings back the cellar list and the cork's row. The pour notes were never in it."
+            ]
+        )
+    ]
+
+    private static let modelContext: [CatalogScenario] = [
+        CatalogScenario(
+            id: "01-tamanar-cracking-tally",
+            title: "Tamanar cracking tally",
+            teaches: [
+                "insert puts the tally in the context, and hasChanges turns true.",
+                "save writes it to the store, and hasChanges turns false."
+            ]
+        ),
+        CatalogScenario(
+            id: "02-tifawin-sack-roll",
+            title: "Tifawin sack roll",
+            teaches: [
+                "Before a save, the context lists what it will insert, change, and delete.",
+                "After the save, all three lists are empty."
+            ]
+        ),
+        CatalogScenario(
+            id: "03-tifawin-roast-card",
+            title: "Tifawin roast card",
+            teaches: [
+                "An edit to a saved card waits in the context until the next save.",
+                "rollback() puts the card back to its saved values."
+            ]
+        ),
+        CatalogScenario(
+            id: "04-tifawin-scorched-pan",
+            title: "Tifawin scorched pan",
+            teaches: [
+                "rollback() drops an unsaved insert from the context.",
+                "The object keeps the values it had. modelContext on that object becomes nil."
+            ]
+        ),
+        CatalogScenario(
+            id: "05-essaouira-press-autosave",
+            title: "Essaouira press autosave",
+            teaches: [
+                "The main context from modelContainer(for:inMemory:) autosaves by default.",
+                "A ModelContext you make yourself starts with autosave off."
+            ]
+        ),
+        CatalogScenario(
+            id: "06-amazir-press-transaction",
+            title: "Amazir press transaction",
+            teaches: [
+                "transaction runs its closure and saves what the closure changed.",
+                "If the transaction throws, nothing from that closure is saved."
+            ]
+        ),
+        CatalogScenario(
+            id: "07-amazir-bottle-rack",
+            title: "Amazir bottle rack",
+            teaches: [
+                "delete marks a saved bottle. The store keeps it until the next save.",
+                "rollback() takes the mark off, and the bottle is back on the rack."
+            ]
+        ),
+        CatalogScenario(
+            id: "08-zitoun-save-ledger",
+            title: "Zitoun save ledger",
+            teaches: [
+                "Each save posts ModelContext.didSave with the identifiers it inserted, updated, and deleted.",
+                "The notification's userInfo carries PersistentIdentifier arrays, not the models."
+            ]
+        ),
+        CatalogScenario(
+            id: "09-zitoun-label-purge",
+            title: "Zitoun label purge",
+            teaches: [
+                "delete(model:where:) removes every label that matches a predicate, without fetching them first.",
+                "The purge waits for save before the store loses the matching labels."
+            ]
+        ),
+        CatalogScenario(
+            id: "10-rahba-shelf-reprice",
+            title: "Rahba shelf reprice",
+            teaches: [
+                "enumerate walks a fetch in batches and hands each jar to a closure.",
+                "Edits made during the walk wait for an explicit save."
+            ]
+        ),
+        CatalogScenario(
+            id: "11-rahba-two-desks",
+            title: "Rahba two desks",
+            teaches: [
+                "Two contexts on one container each hold their own copy of a saved jar order.",
+                "Saving in one context does not rewrite the other context's held object until that context fetches again."
+            ]
+        ),
+        CatalogScenario(
+            id: "12-medina-courier-slip",
+            title: "Medina courier slip",
+            teaches: [
+                "registeredModel(for:) returns the slip only if this context already holds it.",
+                "model(for:) materializes the slip from the store when the context does not yet hold it."
+            ]
+        ),
+        CatalogScenario(
+            id: "13-casablanca-morning-folder",
+            title: "Casablanca morning folder",
+            teaches: [
+                "One @ModelActor save deletes the scorched pan and files the cracking tally with the press run.",
+                "A fresh context reads only what that save left in the store."
             ]
         )
     ]

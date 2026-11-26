@@ -231,7 +231,7 @@ struct ModelBasicsTests {
         #expect(names.count == 4)
     }
 
-    @Test func catalogBottlesTheFirstSixFeatures() {
+    @Test func catalogBottlesTheFirstEightFeatures() {
         #expect(Catalog.features.count == 21)
         #expect(Catalog.features[0].scenarios.count == 13)
         #expect(Catalog.features[1].scenarios.count == 13)
@@ -239,9 +239,11 @@ struct ModelBasicsTests {
         #expect(Catalog.features[3].scenarios.count == 13)
         #expect(Catalog.features[4].scenarios.count == 13)
         #expect(Catalog.features[5].scenarios.count == 13)
-        #expect(Catalog.features.dropFirst(6).allSatisfy { $0.scenarios.isEmpty })
+        #expect(Catalog.features[6].scenarios.count == 13)
+        #expect(Catalog.features[7].scenarios.count == 13)
+        #expect(Catalog.features.dropFirst(8).allSatisfy { $0.scenarios.isEmpty })
         let scenarios = Catalog.features.flatMap(\.scenarios)
-        #expect(scenarios.count == 78)
+        #expect(scenarios.count == 104)
         #expect(Set(scenarios.map(\.id)).count == scenarios.count)
     }
 

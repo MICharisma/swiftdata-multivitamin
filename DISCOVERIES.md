@@ -125,3 +125,47 @@ Shown in [Lattice scratch](features/05-transient/05-lattice-scratch/).
 **What to do.** Keep the aside on the open card. Change a stored property when the book should record something.
 
 Shown in [Bedesten aside](features/05-transient/07-bedesten-aside/).
+
+## ModelContainer and ModelConfiguration
+
+### Two containers that name the same in-memory configuration share that store
+
+**What happens.** The filler opens `ModelConfiguration("pinhao-line", isStoredInMemoryOnly: true)`, inserts a bottling pass, and saves. The corker opens another container with that same configuration name. A fetch on the corker's context returns the filler's pass. The label table opens `ModelConfiguration("pinhao-labels", isStoredInMemoryOnly: true)` and fetches none.
+
+**Why it matters.** An in-memory configuration name is not a private scratch pad. Reusing the name joins the stores.
+
+**What to do.** Give each private desk a distinct configuration name, or keep one container and make contexts from it.
+
+Shown in [Pinhão bottling line](features/07-model-container/07-pinhao-bottling-line/).
+
+### A model held in one container does not refresh when another container saves the same file
+
+**What happens.** The till and the stockroom each open a `ModelContainer` on the Bonfim stock file. The till inserts six bottles and saves. The stockroom fetches that card and holds it. The till sells two bottles and saves. The held stockroom card still shows 6. A new context on the stockroom container shows 4.
+
+**Why it matters.** Opening the same file in two containers does not keep live objects in step. A desk that keeps a card on screen will show a stale count.
+
+**What to do.** Fetch again after the other container may have saved, or share one container and use two contexts.
+
+Shown in [Bonfim till and stockroom](features/07-model-container/12-bonfim-till-and-stockroom/).
+
+## ModelContext
+
+### A ModelContext you make yourself starts with autosave off
+
+**What happens.** A container opened with an in-memory configuration has `mainContext.autosaveEnabled` true. `ModelContext(container)` has `autosaveEnabled` false. An insert on that made context leaves `hasChanges` true, and a fresh context on the container counts 0 rows until `save()`.
+
+**Why it matters.** Code that assumes every context autosaves will leave work unsaved when it builds its own context.
+
+**What to do.** Call `save()`, or set `autosaveEnabled = true` on the context you made.
+
+Shown in [Essaouira press autosave](features/08-model-context/05-essaouira-press-autosave/).
+
+### A context's held object stays stale when another context on the same container saves
+
+**What happens.** The counter and the back desk are two `ModelContext`s on one container. The counter opens Nadia's order for 4 jars and saves. The back desk fetches that order and holds it. The counter sells two jars and saves. The held back-desk object still shows 4. A refetch on the back desk shows 2.
+
+**Why it matters.** Two contexts share a store, not live property values. A screen that keeps an object without refetching will show the old count.
+
+**What to do.** Refetch after the other context may have saved, or edit through the context that holds the object you display.
+
+Shown in [Rahba two desks](features/08-model-context/11-rahba-two-desks/).
