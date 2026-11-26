@@ -11,7 +11,7 @@ On 7 October 2026 Khadija Oubella roasts sack TF-0412 for twelve minutes; a help
 
 | File | Role |
 | --- | --- |
-| [`RoastCard.swift`](RoastCard.swift) | The model and its SwiftUI screen |
+| [`KernelRoast.swift`](KernelRoast.swift) | The model and its SwiftUI screen |
 
 **Try it**
 
