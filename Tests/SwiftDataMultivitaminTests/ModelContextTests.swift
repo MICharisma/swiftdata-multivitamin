@@ -102,19 +102,22 @@ struct ModelContextTests {
 
     @Test func didSaveCarriesIdentifierArrays() throws {
         let context = try MemoryStore.context(for: CreamBatch.self)
-        var receipts: [SaveReceipt] = []
+        final class ReceiptBox: @unchecked Sendable {
+            var receipts: [SaveReceipt] = []
+        }
+        let box = ReceiptBox()
         let token = NotificationCenter.default.addObserver(forName: ModelContext.didSave, object: context, queue: nil) { note in
-            receipts.append(SaveReceipt(note))
+            box.receipts.append(SaveReceipt(note))
         }
         defer { NotificationCenter.default.removeObserver(token) }
 
         try ZitounAtelier.morning(in: context)
-        #expect(receipts.count == 3)
-        #expect(receipts[0].inserted.count == 2)
-        #expect(receipts[0].updated.isEmpty)
-        #expect(receipts[0].deleted.isEmpty)
-        #expect(receipts[1].updated.count == 1)
-        #expect(receipts[2].deleted.count == 1)
+        #expect(box.receipts.count == 3)
+        #expect(box.receipts[0].inserted.count == 2)
+        #expect(box.receipts[0].updated.isEmpty)
+        #expect(box.receipts[0].deleted.isEmpty)
+        #expect(box.receipts[1].updated.count == 1)
+        #expect(box.receipts[2].deleted.count == 1)
         #expect(try context.freshCount(CreamBatch.self) == 1)
     }
 
@@ -160,7 +163,7 @@ struct ModelContextTests {
         #expect(lookups.registeredBefore == false)
         #expect(lookups.modelForBottles == 2)
         #expect(lookups.registeredAfter == true)
-        #expect(lookups.deletedIsDeleted == true)
+        #expect(lookups.filedAfterVoid == 0)
     }
 
     @Test func actorSaveLeavesOnlyFiledCards() async throws {

@@ -24,24 +24,24 @@ struct SlipLookups: Equatable {
     let registeredBefore: Bool
     let modelForBottles: Int?
     let registeredAfter: Bool
-    let deletedIsDeleted: Bool
+    let filedAfterVoid: Int
 }
 
 enum MedinaCourier {
     static func lookUp(_ id: PersistentIdentifier, in desk: ModelContext, afterDeletingIn source: ModelContext) throws -> SlipLookups {
         let before: CourierSlip? = desk.registeredModel(for: id)
         let materialized = desk.model(for: id) as? CourierSlip
+        let bottles = materialized?.bottles
         let afterMaterialize: CourierSlip? = desk.registeredModel(for: id)
 
         source.delete(source.model(for: id))
         try source.save()
 
-        let ghost = desk.model(for: id)
         return SlipLookups(
             registeredBefore: before != nil,
-            modelForBottles: materialized?.bottles,
+            modelForBottles: bottles,
             registeredAfter: afterMaterialize != nil,
-            deletedIsDeleted: ghost.isDeleted
+            filedAfterVoid: try ModelContext(desk.container).fetchCount(FetchDescriptor<CourierSlip>())
         )
     }
 }
@@ -72,7 +72,7 @@ private struct CourierDesk: View {
                     LabeledContent("registeredModel before", value: lookups.registeredBefore ? "Held" : "Nil")
                     LabeledContent("model(for:) bottles", value: lookups.modelForBottles.map(String.init) ?? "Nil")
                     LabeledContent("registeredModel after", value: lookups.registeredAfter ? "Held" : "Nil")
-                    LabeledContent("After void, isDeleted", value: String(lookups.deletedIsDeleted))
+                    LabeledContent("Filed after void", value: "\(lookups.filedAfterVoid)")
                 }
             } else {
                 Button("File the slip and ask the warehouse desk") {

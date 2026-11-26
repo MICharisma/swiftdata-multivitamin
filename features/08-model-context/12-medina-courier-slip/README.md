@@ -15,6 +15,6 @@ On 18 October a courier collects two bottles for Riad des Oliviers; the warehous
 
 **Try it**
 
-Open Medina courier slip. File the slip and ask the warehouse desk. registeredModel is nil until model(for:) materializes it.
+Open Medina courier slip. File the slip and ask the warehouse desk. registeredModel is nil until model(for:) materializes it; after the void a fresh fetch finds no slip.
 
 `swift test` locks the lesson in `modelForMaterializesAndRegisteredDoesNot`.
