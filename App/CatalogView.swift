@@ -227,6 +227,58 @@ struct CatalogView: View {
             CustomsEnvelopeScreen()
         case "13-madrid-morning-folder":
             MezcalHandoverScreen()
+        case "01-coruche-bark-tally":
+            BarkTallyScreen()
+        case "02-sobral-stack-book":
+            CorkStackScreen()
+        case "03-sorraia-boiling-yard":
+            BoilingBatchScreen()
+        case "04-feira-grading-archive":
+            GradingSheetScreen()
+        case "05-feira-punching-floor":
+            PunchRunScreen()
+        case "06-feira-print-room":
+            BrandProofScreen()
+        case "07-pinhao-bottling-line":
+            BottlingPassScreen()
+        case "08-vale-escuro-cellar-book":
+            CellarPalletScreen()
+        case "09-gaia-lodge-register":
+            LodgeEntryScreen()
+        case "10-gaia-blend-trial":
+            BlendSampleScreen()
+        case "11-bonfim-shelf-books":
+            ShelfBottleScreen()
+        case "12-bonfim-till-and-stockroom":
+            StockCardScreen()
+        case "13-lisbon-morning-folder":
+            CellarListingScreen()
+        case "01-tamanar-cracking-tally":
+            CrackingTallyScreen()
+        case "02-tifawin-sack-roll":
+            KernelSackScreen()
+        case "03-tifawin-roast-card":
+            KernelRoastScreen()
+        case "04-tifawin-scorched-pan":
+            PanBatchScreen()
+        case "05-essaouira-press-autosave":
+            PressRunScreen()
+        case "06-amazir-press-transaction":
+            OilDrumScreen()
+        case "07-amazir-bottle-rack":
+            RackBottleScreen()
+        case "08-zitoun-save-ledger":
+            CreamBatchScreen()
+        case "09-zitoun-label-purge":
+            ProductLabelScreen()
+        case "10-rahba-shelf-reprice":
+            SpiceJarScreen()
+        case "11-rahba-two-desks":
+            JarOrderScreen()
+        case "12-medina-courier-slip":
+            CourierSlipScreen()
+        case "13-casablanca-morning-folder":
+            OilHandoverScreen()
         default:
             Text("That scenario is not bottled.")
                 .foregroundStyle(.secondary)
