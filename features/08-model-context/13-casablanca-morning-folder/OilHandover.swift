@@ -23,10 +23,11 @@ enum ArganFolder {
         )
         let scorched = PanBatch(batchCode: "TF-0416-R", kernelKilos: 6, outcome: "Scorched")
         let press = PressRun(runCode: "AM-1009", pressOperator: "Youssef Bennani", roastedKilos: 22, oilLitres: 10)
-        let cards: [any PersistentModel] = [crack, scorched, press]
-        cards.forEach(context.insert)
+        context.insert(crack)
+        context.insert(scorched)
+        context.insert(press)
         try context.save()
-        return cards.map(\.persistentModelID)
+        return [crack.persistentModelID, scorched.persistentModelID, press.persistentModelID]
     }
 }
 
